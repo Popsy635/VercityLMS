@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200..900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+    --color-vercity: #1D1073
+}
+
+@theme {
+    --color-aside: #d46060
+}
+
+@theme {
+    --color-asidetwo: #9dc8ed
+}
+
+@theme {
+    --color-adva: #291c90
+}
+
+@theme {
+    --color-advbut: #2a11f2
+}
+
+@theme {
+    --background-image-ds: url('/public/image 18.png');
+    --background-image-pd: url('/public/image 19.png');
+    --background-image-wd: url('/public/image 20.png');
+
+
+}
+
+@theme {
+    --font-display: "Source Sans 3", sans-serif;
+}
+
+@import "tailwindcss";
+
+@layer base {
+    .material-icons {
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+
+body {
+    font-family: "Source Sans 3", sans-serif;
+}
+
+/* .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+} */
+
+
+@layer base {
+
+
+    a {
+        @apply cursor-pointer;
+    }
+
+    button {
+        @apply cursor-pointer;
+    }
+
+
+}
