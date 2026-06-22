@@ -18,6 +18,7 @@ import bot4 from '../assets/bot4.png'
 import top1 from '../assets/top1.png'
 import top2 from '../assets/top2.png'
 import top3 from '../assets/top3.png'
+import { Link } from 'react-router-dom'
 
 
 
@@ -36,12 +37,14 @@ export function Home() {
     <>
 
      <Nav />
-      <div className='flex flex-row items-center  justify-around mx-5 px-20 my-20'>
+      <div className='flex flex-row items-center  justify-around mx-auto px-20 -mt-10 h-screen'>
             <div className="Master basis-3xl ">
                 <h1 className='font-bold text-6xl leading-20 mb-4'>Master Skills <span className='font-normal text-gray-500'>For Professional</span> <span className='text-vercity'>Growth</span></h1>
                 <p className='text-xl leading-8 mb-7'>Discover Career Accelerators, where industry-relevant <br />skills and hands-on experience prepare you for career success.</p>
-                <button className='text-white text-3xl font-semibold bg-vercity/0 p-px rounded-lg h-23 w-70 hover:bg-linear-to-r from-green-500 via-blue-500 to-red-500 transition ease-in-out duration-400 group '><div className='text-white text-3xl font-semibold h-full w-full rounded-lg flex items-center justify-center bg-adva group-hover:bg-linear-to-bl group-hover:from-vercity group-hover:to-advbut  group-hover:transition group-hover:ease-in-out group-hover:duration-300'>
-                    Start Learning</div></button>
+                <Link to= "/Login">
+                    <button className='text-white text-3xl font-semibold bg-vercity/0 p-px rounded-lg h-23 w-70 hover:bg-linear-to-r from-green-500 via-blue-500 to-red-500 transition ease-in-out duration-400 group '><div className='text-white text-3xl font-semibold h-full w-full rounded-lg flex items-center justify-center bg-adva group-hover:bg-linear-to-bl group-hover:from-vercity group-hover:to-advbut  group-hover:transition group-hover:ease-in-out group-hover:duration-300'>
+                        Start Learning</div></button>
+                </Link>
             </div>
 
             <div className='basis-2xl float-right -mr-2'>
@@ -182,8 +185,10 @@ export function Home() {
         <div className='w-10/12 flex flex-col items-center gap-6 mx-auto'>
           <h1 className='text-white font-normal text-6xl/snug text-center'>Advance Your Career With Our 100% Online Learning Programs Today!</h1>
           
-          <button className='text-white text-3xl font-semibold bg-vercity/0 p-px rounded-lg h-23 w-79 hover:bg-linear-to-r from-green-500 via-blue-500 to-red-500 transition ease-in-out duration-400 group '><div className='text-white text-3xl font-semibold h-full w-full rounded-lg flex items-center justify-center bg-advbut group-hover:bg-linear-to-bl group-hover:from-vercity group-hover:to-advbut  group-hover:transition group-hover:ease-in-out group-hover:duration-300'>
-            Start Learning</div></button>
+          <Link to="/Login">
+              <button className='text-white text-3xl font-semibold bg-vercity/0 p-px rounded-lg h-23 w-79 hover:bg-linear-to-r from-green-500 via-blue-500 to-red-500 transition ease-in-out duration-400 group '><div className='text-white text-3xl font-semibold h-full w-full rounded-lg flex items-center justify-center bg-advbut group-hover:bg-linear-to-bl group-hover:from-vercity group-hover:to-advbut  group-hover:transition group-hover:ease-in-out group-hover:duration-300'>
+                Start Learning</div></button>
+          </Link>
         </div>
       </div>
        <div className='footer bg-vercity h-162.5 flex flex-col'>
