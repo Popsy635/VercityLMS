@@ -1,6 +1,3 @@
-import React from 'react'
-
-
 type HeadingProps = {
     label: string,
     style: string
