@@ -1,6 +1,6 @@
 
-import useAuth from '../hooks/useAuth';
-import { HomeNav } from '../Components/html/HomeNav';
+
+
 import { Nav } from '../Components/html/Nav';
 import engine from '../assets/engine.jpg'
 import { useState } from 'react';
@@ -12,7 +12,7 @@ import image66 from '../assets/image66.png'
 import image67 from '../assets/image67.png'
 
 export const Teach = () => {
-    const { auth } = useAuth();
+    
     
 
     const [activeTab, setActiveTab] = useState(0)

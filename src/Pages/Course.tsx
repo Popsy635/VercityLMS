@@ -105,7 +105,7 @@ export const Course = () => {
 
   const [slide, setSlide] = useState(0);
 
-  const [selectedLevel, setSelectedLevel] = useState("All");
+  const [selectedLevel] = useState("All");
 
   useEffect(() => {
   console.log("Selected Level:", selectedLevel);
