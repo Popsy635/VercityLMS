@@ -699,7 +699,7 @@ export const ActualDashboard = ({
                                                 </div>
 
 
-                                                <div className="flex gap-8 md:gap-2">
+                                                <div className="flex flex-col gap-2 sm:flex-col md:flex-row">
                                                     <button
                                                         onClick={() =>
                                                             navigate(
