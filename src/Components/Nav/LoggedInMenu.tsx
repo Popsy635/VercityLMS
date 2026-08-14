@@ -259,7 +259,7 @@ export const LoggedInMenu = ({ logout }: MenuProps) => {
                         {/* Notification badge */}
 
                         {hasUnreadNotifications && (
-                            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] text-white">
+                            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-pink-400 px-1 text-[10px] text-white">
                                 2
                             </span>
                         )}
