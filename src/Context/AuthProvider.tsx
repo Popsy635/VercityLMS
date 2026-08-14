@@ -42,11 +42,11 @@ useEffect(() => {
 }, [auth]);
 
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
   }, [auth]);
 
 
-  console.log("AuthProvider auth:", auth);
+  // console.log("AuthProvider auth:", auth);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

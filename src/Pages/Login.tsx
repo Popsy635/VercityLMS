@@ -103,7 +103,7 @@ export const Login = () => {
           withCredentials: true
         });
 
-      console.log(JSON.stringify(response?.data))
+      // console.log(JSON.stringify(response?.data))
       // console.log(JSON.stringify(response))
       const accessToken = response.data.token;
 
@@ -130,7 +130,7 @@ export const Login = () => {
 
 
 
-      console.log("Saved:", localStorage.getItem("auth"));
+      // console.log("Saved:", localStorage.getItem("auth"));
 
       setUser('');
       setPassword('');
