@@ -38,8 +38,8 @@ export function Home() {
 
 
 
-const {auth} = useContext(AuthContext);
-const isLoggedIn = !!auth.accessToken;
+    const { auth } = useContext(AuthContext);
+    const isLoggedIn = !!auth.accessToken;
 
 
 
@@ -58,7 +58,7 @@ const isLoggedIn = !!auth.accessToken;
                         </Link>) : (<Link to="/Login">
                             <button className='text-white text-3xl font-semibold bg-vercity/0 p-px rounded-lg h-16 w-56 md:w-64 hover:bg-linear-to-r from-green-500 via-blue-500 to-red-500 transition ease-in-out duration-400 group '><div className='text-white text-3xl font-semibold h-full w-full rounded-lg flex items-center justify-center bg-adva group-hover:bg-linear-to-bl group-hover:from-vercity group-hover:to-advbut  group-hover:transition group-hover:ease-in-out group-hover:duration-300'>
                                 Get Started</div></button>
-                        </Link>) }
+                        </Link>)}
                     </div>
 
                     <div className='flex-1 flex justify-end'>
@@ -109,12 +109,12 @@ const isLoggedIn = !!auth.accessToken;
                 </section>
             </div>
             <div>
-                <section className='bg-gray-100 pt-20 '>
+                <section className='bg-gray-100 py-20 '>
                     <h1 className='capitalize text-5xl text-center'>Real skills for real careers</h1>
                     <div className="max-w-screen-2xl mx-auto mt-20 px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ">
                         <img src={girlie} alt="girl background" className='w-full max-w-3xl' />
-                        <div className='flex-1 w-full max-w-xl mx-auto'>
-                            <Carousel />
+                        <div className="w-full flex justify-center items-center">
+                            <Carousel/>
                         </div>
                     </div>
                 </section>
@@ -124,10 +124,10 @@ const isLoggedIn = !!auth.accessToken;
                     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 lg:my-10">
                         <div className="rounded-3xl overflow-hidden">
                             <div className="grid grid-cols-1 lg:grid-cols-4 bg-aside/60">
-                                <div className='w-full lg:max-w-xl flex flex-col justify-center'>
-                                    <div className="py-12 md:py-0 max-w-md md:text-sm flex flex-col items-center  px-8 gap-4">
+                                <div className='w-full lg:max-w-xl flex py-12  justify-center'>
+                                    <div className="py-12 md:py-0 max-w-lg  md:text-sm flex flex-col items-center justify-center px-8 gap-4">
                                         <h2 className=' font-medium text-4xl'>Crafted for all</h2>
-                                        <p className='leading-snug md:line-clamp-4 '>From students and professionals to entrepreneurs and lifelong learners, discover courses designed to help you learn, grow, and succeed—wherever your journey begins.</p>
+                                        <p className='leading-snug text-2xl text-center lg:text-lg'>From students and professionals to entrepreneurs and lifelong learners, discover courses designed to help you learn, grow, and succeed—wherever your journey begins.</p>
                                     </div>
                                 </div>
                                 {topImages.map((image) => (

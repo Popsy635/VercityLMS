@@ -1,402 +1,546 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
-import { Nav } from '../Components/html/Nav'
-import useAuth from '../hooks/useAuth'
-import { Footer } from '../Components/html/Footer'
-import img43 from '../assets/image43.png'
-import img44 from '../assets/image44.png'
-import img47 from '../assets/image47.png'
-import useAxiosPrivate from '../hooks/useAxiosPrivate'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import thum from '../assets/image20.png'
-import { useParams } from "react-router-dom";
-import vids from '../assets/vidthumb.png'
+import { Nav } from "../Components/html/Nav";
+import { Footer } from "../Components/html/Footer";
+import axios from "../api/axios";
+
+
+import thum from "../assets/image20.png";
+import vids from "../assets/vidthumb.png";
+
+
+type Lesson = {
+  _id: string;
+  title: string;
+  duration: number;
+  order: number;
+  videoUrl: string;
+  isPreview: boolean;
+};
+
+
+type CourseType = {
+  _id: string;
+  title: string;
+  description: string;
+  thumbnail: string | null;
+  category: string;
+  level: string;
+  price: number;
+
+  instructorId?: {
+    _id: string;
+    name: string;
+  };
+};
+
 
 export const Course = () => {
 
+  const navigate = useNavigate();
+
+
+  
+
   const { courseId } = useParams();
-  const thumb = thum;
+
+const [course, setCourse] = useState<CourseType | null>(null);
+const [loadingCourse, setLoadingCourse] = useState(true);
+const [courseError, setCourseError] = useState("");
 
 
-
-  type Lesson = {
-    _id: string;
-    title: string;
-    duration: number;
-    order: number;
-    videoUrl: string;
-    isPreview: boolean;
-  };
-
-  type Course = {
-    _id: string;
-    title: string;
-    description: string;
-    thumbnail: string | null;
-    category: string;
-    level: string;
-    price: number;
-
-    instructorId: {
-      _id: string;
-      name: string;
-    };
-
-    details?: {
-      duration: string;
-      lessons: Lesson[];
-      instructor: string;
-      level: string;
-    }
-  };
+  /*
+   * The catalogue already fetched the course.
+   * We receive that course through React Router state.
+   */
 
 
-  const normalizeCourses = (payload: unknown): Course[] => {
-    if (Array.isArray(payload)) {
-      return payload as Course[];
-    } if (
-      payload && typeof payload === 'object' &&
-      'data' in payload &&
-      Array.isArray((payload as { data: unknown }).data)
-    ) {
-      return (payload as { data: Course[] }).data;
-    }
-
-    return [];
-  };
-
-  const axiosPrivate = useAxiosPrivate();
-  const [courses, setCourses] = useState<Course[]>([])
-
-  const { auth } = useAuth();
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-
-      try {
-
-        const response = await axiosPrivate.get("/student/courses");
-
-        const parsedCourses = normalizeCourses(response.data);
-
-        setCourses(parsedCourses);
-        
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.log("Status:", error.response?.status);
-          console.log("Response:", error.response?.data);
-          console.log("Headers:", error.response?.headers);
-        } else {
-          console.log(error);
-        }
-
-      }
-
-      
-    }
-    fetchCourses()
-  }, [axiosPrivate])
-
-  useEffect(() => {
-    setSlide(0);
-  }, [courseId]);
-
-
-
-  const [slide, setSlide] = useState(0);
-
-  const [selectedLevel] = useState("All");
-
-  useEffect(() => {
-  console.log("Selected Level:", selectedLevel);
-}, [selectedLevel]);
-
-
-  const nextSlide = () => {
-    if (!orderedCourses.length) return;
-
-
-    setSlide((current) =>
-      current === orderedCourses.length - 1 ? 0 : current + 1
-    );
-  };
-
-  const prevSlide = () => {
-    if (!orderedCourses.length) return;
-
-    setSlide((current) =>
-      current === 0 ? orderedCourses.length - 1 : current - 1
-    );
-  };
-
-  const isLoggedIn = !!auth.accessToken;
-
-  const displayCourses = isLoggedIn
-    ? courses
-    : [
-      {
-        _id: "wd",
-        title: "Web Development",
-        description: "...",
-        thumbnail: thum,
-        category: "Development",
-        level: "Intermediate",
-        price: 20000,
-        instructorId: {
-          _id: "1",
-          name: "John Doe",
-        },
-
-        details: {
-          instructor: "Prof Adam",
-          duration: "90 Days",
-          level: "Intermediate",
-          lessons: [
-            {
-              id: 1,
-              thumbnail: img43,
-              title: "HTML Fundamentals",
-              order: "1 of 8 Lessons",
-            },
-
-            {
-              id: 2,
-              thumbnail: img44,
-              title: "CSS Fundamentals",
-              order: "2 of 8 Lessons",
-            },
-            {
-              id: 3,
-              thumbnail: img47,
-              title: "JavaScript Basics",
-              order: "3 of 8 Lessons",
-            },
-
-          ]
-        }
-      }
-    ];
-
-
-displayCourses.forEach((course, index) => {
-  console.log(index, course);
-})
-
- const filteredCourses =
-  selectedLevel === "All"
-    ? displayCourses
-    : displayCourses.filter((course) => {
-        const match =
-          course.level.trim().toLowerCase() ===
-          selectedLevel.trim().toLowerCase();
-
-        console.log({
-          title: course.title,
-          level: course.level,
-          selectedLevel,
-          match,
-        });
-
-        return match;
-      });
-
-      console.log("Selected Level:", selectedLevel);
-
-displayCourses.forEach(course => {
-  console.log(
-    "Course:",
-    course.title,
-    "| Level:",
-    course.level,
-    "| Match:",
-    course.level.toLowerCase() === selectedLevel.toLowerCase()
-  );
-});
-
-console.log("Filtered:", filteredCourses);
-
-console.log("Filtered Courses:", filteredCourses);
-
-  const orderedCourses = [
-    ...filteredCourses.filter(course => course._id === courseId),
-    ...filteredCourses.filter(course => course._id !== courseId),
-  ];
-
-  console.log("Ordered Courses:", orderedCourses);
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
-
-
-
-  const currentCourse = orderedCourses[slide];
+  const [loadingLessons, setLoadingLessons] = useState(true);
+  const [lessonError, setLessonError] = useState("");
 
 
   useEffect(() => {
-    if (!currentCourse?._id) return;
+
+  if (!courseId) {
+    setCourseError("Course ID was not provided.");
+    setLoadingCourse(false);
+    return;
+  }
+
+  const fetchCourse = async () => {
+
+    try {
+
+      setLoadingCourse(true);
+      setCourseError("");
+
+      const response = await axios.get(
+        `/courses/${courseId}`
+      );
+
+      console.log("COURSE DETAILS:", response.data);
+
+      setCourse(response.data?.data);
+
+    } catch (error: any) {
+
+      console.error("COURSE ERROR:", error);
+
+      console.log("STATUS:", error?.response?.status);
+      console.log("DATA:", error?.response?.data);
+
+      setCourseError(
+        error?.response?.data?.message ||
+        "Unable to load course."
+      );
+
+    } finally {
+
+      setLoadingCourse(false);
+
+    }
+
+  };
+
+  fetchCourse();
+
+}, [courseId]);
+
+
+  /*
+   * Fetch lessons for this course
+   */
+  useEffect(() => {
+
+    if (!courseId) {
+      setLoadingLessons(false);
+      return;
+    }
+
 
     const fetchLessons = async () => {
+
       try {
-        const response = await axiosPrivate.get(
-          `/student/courses/${currentCourse._id}/lessons`
+
+        setLoadingLessons(true);
+        setLessonError("");
+
+        const response = await axios.get(
+          `/courses/${courseId}/lessons`
         );
 
-        console.log("LESSONS:", response.data.data);
 
-        setLessons(response.data.data);
-      } catch (err) {
-        console.error(err);
+        console.log("LESSONS RESPONSE:", response.data);
+
+
+        setLessons(response.data?.data || []);
+
+      } catch (error: any) {
+        console.error("LESSON ERROR:", error);
+
+        console.log("STATUS:", error?.response?.status);
+        console.log("DATA:", error?.response?.data);
+        console.log("URL:", error?.config?.url);
+        console.log("BASE URL:", error?.config?.baseURL);
+        console.log("HEADERS:", error?.config?.headers);
+
+        setLessonError(
+          `Unable to load lessons (${error?.response?.status || "network error"})`
+        );
+      } finally {
+
+        setLoadingLessons(false);
 
       }
+
     };
 
+
     fetchLessons();
-  }, [currentCourse, axiosPrivate]);
 
-  useEffect(() => {
-  setSlide(0);
-}, [courseId, selectedLevel]);
+  }, [courseId]);
 
+  
+  /*
+  * Course doesn't exist in navigation state
+  */
+ if (loadingCourse) {
+   
+   return (
+     <div className="flex min-h-screen items-center justify-center">
 
+      <div className="text-center">
 
+        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-vercity" />
+
+        <p className="mt-5 text-gray-500">
+          Loading course...
+        </p>
+
+      </div>
+
+    </div>
+  );
+  
+}
+
+if (courseError || !course) {
+  
   return (
-    <div>
-       <Nav />
-      <div className=' py-10 flex flex-col items-center'>
-        <div className=' rounded-lg flex justify-between items-center gap-20 w-7xl m-auto shadow-xl inset-shadow-2xs  overflow-clip'>
-          <div className='px-10 flex flex-col gap-10 basis-2xl -mt-20 '>
-            <h1 className='font-medium text-6xl text-vercity'> {currentCourse?.title ?? "Loading..."}</h1>
-            <p>{currentCourse?.description ?? "Loading course..."} </p>
-          </div>
-          <div style={{ backgroundImage: `url(${currentCourse?.thumbnail ?? thumb})` }} className=" w-120 h-120 bg-cover bg-center bg-no-repeat "
-          ></div>
-        </div>
-        <div className='flex gap-8 items-center mt-6 '>
-          <div className=' shadow-xl inset-shadow-xs flex justify-center items-center rounded-full'>
-            <button className='left-arrow cursor-pointer hover:opacity-70 transition rounded-full  ' onClick={prevSlide} aria-label="Previous slide">
-              <svg width="40" height="40" viewBox="32 0 88 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M79.0003 20.67C78.8103 20.67 78.6203 20.6 78.4703 20.45L71.9503 13.93C70.8903 12.87 70.8903 11.13 71.9503 10.07L78.4703 3.55002C78.7603 3.26002 79.2403 3.26002 79.5303 3.55002C79.8203 3.84002 79.8203 4.32002 79.5303 4.61002L73.0103 11.13C72.5303 11.61 72.5303 12.39 73.0103 12.87L79.5303 19.39C79.8203 19.68 79.8203 20.16 79.5303 20.45C79.3803 20.59 79.1903 20.67 79.0003 20.67Z" fill="#000000" />
-              </svg>
-            </button>
-          </div>
-          <div className=' shadow-xl inset-shadow-xs flex justify-center items-center rounded-full'>
-            <button className='right-arrow cursor-pointer hover:opacity-70 transition rounded-full  ' onClick={nextSlide} aria-label="Next slide">
-              <svg width="40" height="40" viewBox="-32 0 88 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8.90961 20.67C8.71961 20.67 8.52961 20.6 8.37961 20.45C8.08961 20.16 8.08961 19.68 8.37961 19.39L14.8996 12.87C15.3796 12.39 15.3796 11.61 14.8996 11.13L8.37961 4.61002C8.08961 4.32002 8.08961 3.84002 8.37961 3.55002C8.66961 3.26002 9.14961 3.26002 9.43961 3.55002L15.9596 10.07C16.4696 10.58 16.7596 11.27 16.7596 12C16.7596 12.73 16.4796 13.42 15.9596 13.93L9.43961 20.45C9.28961 20.59 9.09961 20.67 8.90961 20.67Z" fill="#000000" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen flex flex-col">
 
-      <div className='essentials'>
-        <div className='w-7xl  mx-auto flex flex-col gap-10 justify-center'>
-          <div className='flex flex-col gap-6'>
-            <h1 className='text-5xl'>
-              Course Essentials
-            </h1>
-            
-            <div className='flex gap-4 '>
-              <div className="flex gap-4">
-  <span className="px-3 py-2 border rounded-lg bg-vercity text-white">
-    {currentCourse?.level?.charAt(0).toUpperCase() +
-      currentCourse?.level?.slice(1)}
-  </span>
-</div>
-              {/* <button
-              onClick={() => setSelectedLevel("All")}
-              className="px-2 py-2 border rounded-lg"
+      <Nav />
+
+      <main className="flex flex-1 items-center justify-center">
+
+        <div className="text-center">
+
+          <h1 className="text-3xl font-semibold text-vercity">
+            Course not found
+          </h1>
+
+          <p className="mt-3 text-gray-500">
+            {courseError || "We couldn't find this course."}
+          </p>
+
+          <button
+            onClick={() => navigate("/Courses")}
+            className="mt-6 rounded-lg bg-vercity px-6 py-3 text-white"
             >
-              All
-            </button>
-              <button
-                onClick={() => setSelectedLevel("Beginner")}
-                className="px-2 py-2 border rounded-lg"
-              >
-                Beginner
-              </button>
+            Back to Courses
+          </button>
 
-              <button
-                onClick={() => setSelectedLevel("Intermediate")}
-                className="px-2 py-2 border rounded-lg"
-              >
-                Intermediate
-              </button>
-
-              <button
-                onClick={() => setSelectedLevel("Advanced")}
-                className="px-2 py-2 border rounded-lg"
-              >
-                Advanced
-              </button> */}
-
-            </div>
-          </div>
-
-          <div className='courses '>
-            <div className='  shadow-xl inset-shadow-2xs flex rounded-lg overflow-clip'>
-              <div className='flex  p-10 w-sm shadow-[5px_0_10px_-3px_rgba(0,0,0,0.1)] '>
-                <div className='flex flex-col gap-6 justify-center items-center'>
-                  <div className="description p-5 w-75 shadow-lg inset-shadow-2xs rounded-lg flex flex-col gap-2 ">
-                    <div style={{ backgroundImage: `url(${vids})` }} className='w-65 h-40 bg-no-repeat bg-size-[300px] bg-center rounded-lg'></div>
-                    <h1 className='text-lg font-semibold'>{currentCourse?.title}</h1>
-                    <p className='capitalize'> {currentCourse?.level}</p>
-                    <p className='font-light text-slate-400'>{currentCourse?.instructorId?.name}</p>
-                  </div>
-                  <div className="button flex w-75 justify-between items-center">
-                    <button className='bg-vercity px-4 py-2 text-white rounded-lg'>Enroll Now</button>
-                    <p className='font-bold text-vercity'>₦{currentCourse?.price.toLocaleString()}</p>
-                  </div>
-                </div>
-              </div>
-              <div className='flex w-full pl-12 gap-10 overflow-auto justify-start'>
-                {lessons.map((lesson) => (
-                  <div key={lesson._id} className='flex flex-col justify-center '>
-                    <div style={{ backgroundImage: `url(${vids})` }} className='w-65 h-40 bg-no-repeat bg-size-[300px] bg-center rounded-lg'></div>
-                    <div className=''>
-                      <h1 className='text-lg font-semibold'>{lesson.title}</h1>
-                      <p className='text-slate-400 font-light'>{lesson.order} of {lessons.length} Courses</p>
-                    </div>
-                  </div>
-                ))}
-
-
-
-
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <div>
-        <div className="advance h-105 flex justify-center py-10 ">
-          <div className='flex flex-col gap-10 w-7/8 m-auto '>
-            <div>
-              <h1 className='text-2xl text-vercity font-bold'>Explore More Skills</h1>
-            </div>
-            <div className='grid grid-cols-4 gap-20  '>
-              <div className='flex flex-col items-center text-vercity'><h1>Product Design</h1></div>
-              <div className='flex flex-col items-center text-vercity'><h1>Digital Marketing</h1></div>
-              <div className='flex flex-col items-center text-vercity'><h1>Data Analysis</h1></div>
-              <div className='flex flex-col items-center text-vercity'><h1>Product Management</h1></div>
-              <div className='flex flex-col items-center text-vercity'><h1>Web Development</h1></div>
-              <div className='flex flex-col items-center text-vercity'><h1>Mobile Development</h1></div>
-              <div className='flex flex-col items-center text-vercity'><h1>Game Development</h1></div>
-              <div className='flex flex-col items-center text-vercity'><h1>Entrepreneurship</h1></div>
-            </div>
-          </div>
-        </div>
-        
-      </div>
+      </main>
 
       <Footer />
 
+    </div>
+  );
+  
+}
 
+const handleEnroll = () => {
+  navigate(`/Checkout/${course._id}`, {
+      state: {
+          course,
+      },
+  });
+};
+
+
+  return (
+
+    <div className="min-h-screen">
+
+      <Nav />
+
+
+      {/* ================= HERO ================= */}
+
+      <section className="py-10">
+
+        <div className="mx-auto w-full max-w-7xl px-6">
+
+          <div className="flex overflow-hidden rounded-2xl shadow-xl">
+
+            {/* TEXT */}
+
+            <div className="flex flex-1 flex-col justify-center gap-8 p-12">
+
+              <h1 className="text-5xl font-medium text-vercity lg:text-6xl">
+                {course.title}
+              </h1>
+
+              <p className="max-w-2xl text-lg leading-relaxed text-gray-600">
+                {course.description}
+              </p>
+
+            </div>
+
+
+            {/* IMAGE */}
+
+            <div
+              style={{
+                backgroundImage: `url(${course.thumbnail || thum})`,
+              }}
+              className="hidden h-120 w-120 shrink-0 bg-cover bg-center bg-no-repeat lg:block"
+            />
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* ================= COURSE ESSENTIALS ================= */}
+
+      <section className="py-12">
+
+        <div className="mx-auto w-full max-w-7xl px-6">
+
+          <div className="flex flex-col gap-8">
+
+
+            <h2 className="text-4xl font-medium lg:text-5xl">
+              Course Essentials
+            </h2>
+
+
+            {/* COURSE LEVEL */}
+
+            <div>
+
+              <span className="rounded-lg border bg-vercity px-4 py-2 text-white capitalize">
+                {course.level}
+              </span>
+
+            </div>
+
+
+
+            {/* ================= COURSE CONTENT ================= */}
+
+            <div className="overflow-hidden rounded-2xl shadow-xl">
+
+
+              <div className="flex flex-col lg:flex-row">
+
+
+                {/* ================= COURSE INFO ================= */}
+
+                <div className="w-full shrink-0 p-8 lg:w-96">
+
+                  <div className="flex flex-col gap-6">
+
+
+                    {/* COURSE CARD */}
+
+                    <div className="rounded-2xl border border-gray-200 p-4 shadow-sm">
+
+
+                      <div
+                        style={{
+                          backgroundImage: `url(${course.thumbnail || vids
+                            })`,
+                        }}
+                        className="h-40 w-full rounded-xl bg-cover bg-center"
+                      />
+
+
+                      <h3 className="mt-4 text-lg font-semibold">
+                        {course.title}
+                      </h3>
+
+
+                      <p className="mt-2 text-sm text-gray-500">
+                        Learn {course.category} in this course.
+                      </p>
+
+
+                      <p className="mt-3 text-sm text-gray-400">
+                        Prof. {course.instructorId?.name || "Instructor"}
+                      </p>
+
+                    </div>
+
+
+
+                    {/* ENROLL */}
+
+                    <div className="flex items-center justify-between">
+
+                      <button
+                        type="button"
+                        onClick={handleEnroll}
+                        className="rounded-lg bg-vercity px-5 py-2.5 text-white transition hover:opacity-90"
+                      >
+                        Enroll Now
+                      </button>
+
+
+                      <p className="font-bold text-vercity">
+
+                        {course.price === 0
+                          ? "Free"
+                          : `₦${course.price.toLocaleString()}`}
+
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+
+                {/* ================= LESSONS ================= */}
+
+                <div className="min-w-0 flex-1 p-8">
+
+
+                  {loadingLessons && (
+
+                    <div className="flex h-full min-h-60 items-center justify-center">
+
+                      <p className="text-gray-400">
+                        Loading lessons...
+                      </p>
+
+                    </div>
+
+                  )}
+
+
+                  {!loadingLessons && lessonError && (
+
+                    <div className="flex h-full min-h-60 items-center justify-center">
+
+                      <div className="text-center">
+
+                        <p className="text-lg font-medium text-gray-700">
+                          Course preview
+                        </p>
+
+                        <p className="mt-2 text-sm text-gray-400">
+                          Enroll in this course to access the lessons.
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  )}
+
+
+                  {!loadingLessons &&
+                    !lessonError &&
+                    lessons.length === 0 && (
+
+                      <div className="flex h-full min-h-60 items-center justify-center">
+
+                        <p className="text-gray-400">
+                          No lessons available for this course yet.
+                        </p>
+
+                      </div>
+
+                    )}
+
+
+                  {!loadingLessons &&
+                    !lessonError &&
+                    lessons.length > 0 && (
+
+                      <div className="flex gap-8 overflow-x-auto pb-4">
+
+                        {lessons.map((lesson, index) => (
+
+                          <div
+                            key={lesson._id}
+                            className="w-65 shrink-0"
+                          >
+
+                            {/* VIDEO THUMBNAIL */}
+
+                            <div
+                              style={{
+                                backgroundImage: `url(${vids})`,
+                              }}
+                              className="h-40 w-65 rounded-xl bg-cover bg-center"
+                            />
+
+
+                            {/* LESSON TITLE */}
+
+                            <h3 className="mt-4 text-lg font-semibold">
+                              {lesson.title}
+                            </h3>
+
+
+                            {/* LESSON NUMBER */}
+
+                            <p className="mt-2 text-sm text-gray-400">
+
+                              {index + 1} of {lessons.length} Lessons
+
+                            </p>
+
+                          </div>
+
+                        ))}
+
+                      </div>
+
+                    )}
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* ================= EXPLORE MORE ================= */}
+
+      <section className="py-16">
+
+        <div className="mx-auto w-full max-w-7xl px-6">
+
+          <h2 className="mb-10 text-2xl font-bold text-vercity">
+            Explore More Skills
+          </h2>
+
+
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+
+            {[
+              "Product Design",
+              "Digital Marketing",
+              "Data Analysis",
+              "Product Management",
+              "Web Development",
+              "Mobile Development",
+              "Game Development",
+              "Entrepreneurship",
+            ].map((skill) => (
+
+              <div
+                key={skill}
+                className="text-vercity"
+              >
+                {skill}
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <Footer />
 
     </div>
 
-  )
+  );
 
-
-}
-
+};

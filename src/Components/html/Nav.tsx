@@ -3,11 +3,13 @@ import { Logo } from '../Nav/Logo'
 import { Dropdown } from './Dropdown/Dropdown'
 import { SearchBar } from '../Nav/SearchBar'
 import useAuth from '../../hooks/useAuth'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoggedOutMenu } from '../Nav/LoggedOutMenu'
 import { LoggedInMenu } from '../Nav/LoggedInMenu'
 import axios from '../../api/axios'
+
+
 
 
 

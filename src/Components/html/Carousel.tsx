@@ -1,10 +1,11 @@
-import { useState} from 'react'
+import { useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import image20 from '../../assets/image20.png'
+import axios from '../../api/axios'
 // import axios from '../../api/axios'
 // import { AxiosError } from "axios";
 // import image18 from '../../assets/image18.png';
-import image19 from '../../assets/image19.png';
+// import image19 from '../../assets/image19.png';
 
 
 
@@ -17,21 +18,21 @@ type Course = {
 
 const fallback = image20
 
-const demoCourses: Course[] = [
-  {
-    _id: "1",
-    title: "Web Development",
-    description: "Master HTML, CSS, JavaScript and React.",
-    thumbnail: image20,
-  },
-  {
-    _id: "2",
-    title: "Product Design",
-    description: "Learn UI/UX and build modern interfaces.",
-    thumbnail: image19,
-  },
+// const demoCourses: Course[] = [
+//   {
+//     _id: "1",
+//     title: "Web Development",
+//     description: "Master HTML, CSS, JavaScript and React.",
+//     thumbnail: image20,
+//   },
+//   {
+//     _id: "2",
+//     title: "Product Design",
+//     description: "Learn UI/UX and build modern interfaces.",
+//     thumbnail: image19,
+//   },
   
-];
+// ];
 // const courses: Slide[] = [
 //     { id: "da", image: image18, title: 'Data Science', description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio distinctio illum sint!' },
 //     { id: "pd", image: image19, title: 'Product Design', description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio distinctio illum sint!' },
@@ -44,7 +45,24 @@ export const Carousel = () => {
       
 
 
-    const [courses] = useState<Course[]>(demoCourses);
+    const [courses, setCourses] = useState<Course[]>([]);
+
+    useEffect(() => {
+    const fetchCourses = async () => {
+        try {
+            const response = await axios.get("/courses/allcourses");
+
+            console.log("Courses:", response.data);
+
+            setCourses(response.data.data);
+
+        } catch (error) {
+            console.error("Failed to fetch courses:", error);
+        }
+    };
+
+    fetchCourses();
+}, []);
     
 
     // const normaliseCourses = (payload: unknown): Course[] => {
@@ -129,17 +147,17 @@ console.log("Carousel courses:", courses);
 
 
     return (
-<div className="carousel relative flex justify-center items-center w-full max-w-xl xl:max-w-2xl">
+<div className="carousel relative  max-w-xl xl:max-w-2xl">
 
             {courses.map((course, idx) => {
-                return (<div className={slide === idx ? "slide w-full aspect-4/5 " : "hidden w-full aspect-4/5"} >
+                return (<div className={slide === idx ? "slide w-full  " : "hidden w-full aspect-4/5"} >
                     <div key={idx} className='relative flex justify-center items-end w-full h-[full] rounded-3xl '>
                         <img src={course.thumbnail ?? fallback} alt={course.title} className=' w-full h-full object-cover rounded-3xl' />
                         <div className='absolute inset-0 bg-linear-to-t from-black/80 via-black-80 to-transparent rounded-3xl'></div>
-                        <div className=' max-w-sm   flex flex-col gap-2 absolute -ml-7 mb-10'>
+                        <div className=' max-w-sm md:max-w-lg flex flex-col gap-2 absolute ml-10 md:-ml-7 mb-10'>
                             <h1 className='text-white font-semibold text-4xl'>{course.title}</h1>
                             <p className='text-white '>{course.description}</p>
-                            <button onClick={() => navigate(`/course/${course._id}`)} className='bg-white rounded-lg p-2 w-fit px-6'>Learn More</button>
+                            <button type='button' onClick={() => navigate(`/course/${course._id}`)} className='bg-white rounded-lg p-2 w-fit px-6'>Learn More</button>
                             <div className='flex justify-center gap-6 '>
                                 <div className='flex justify-between items-center w-120 mt-5'>
 
