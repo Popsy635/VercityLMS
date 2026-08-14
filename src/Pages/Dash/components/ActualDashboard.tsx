@@ -699,7 +699,7 @@ export const ActualDashboard = ({
                                                 </div>
 
 
-                                                <div className="flex gap-8">
+                                                <div className="flex gap-8 md:gap-2">
                                                     <button
                                                         onClick={() =>
                                                             navigate(
@@ -716,7 +716,7 @@ export const ActualDashboard = ({
                                                                 `/Dashboard/quizzes/${currentCourse.courseId._id}`
                                                             )
                                                         }
-                                                        className="mt-3 rounded-lg border border-vercity px-5 py-2.5 text-sm font-medium text-vercity"
+                                                        className="mt-4 rounded-lg border border-vercity px-5 py-2.5 text-sm font-medium text-vercity"
                                                     >
                                                         Take Quiz
                                                     </button>

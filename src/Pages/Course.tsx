@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Nav } from "../Components/html/Nav";
 import { Footer } from "../Components/html/Footer";
 import axios from "../api/axios";
-
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 import thum from "../assets/image20.png";
 import vids from "../assets/vidthumb.png";
@@ -39,9 +39,7 @@ type CourseType = {
 export const Course = () => {
 
   const navigate = useNavigate();
-
-
-  
+  const axiosPrivate = useAxiosPrivate();
 
   const { courseId } = useParams();
 
@@ -224,11 +222,35 @@ if (courseError || !course) {
   
 }
 
-const handleEnroll = () => {
+const handleEnroll = async () => {
+
+  if (course.price === 0) {
+
+    try {
+
+      await axiosPrivate.post("/student/enroll", {
+        courseId: course._id,
+      });
+
+      navigate(`/Rooms/${course._id}`);
+
+    } catch (error: any) {
+
+      console.error("ENROLLMENT ERROR:", error);
+
+      console.log("STATUS:", error?.response?.status);
+      console.log("DATA:", error?.response?.data);
+
+    }
+
+    return;
+  }
+
+  // Paid course
   navigate(`/Checkout/${course._id}`, {
-      state: {
-          course,
-      },
+    state: {
+      course,
+    },
   });
 };
 
