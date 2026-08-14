@@ -277,9 +277,11 @@ export const Checkout = () => {
                                                 </label>
 
                                                 <input
+                                                disabled
+                                                
                                                     type="text"
                                                     placeholder="1234 5678 9012 3456"
-                                                    className="w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
+                                                    className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
                                                 />
 
                                             </div>
@@ -295,9 +297,10 @@ export const Checkout = () => {
                                                     </label>
 
                                                     <input
+                                                    disabled
                                                         type="text"
                                                         placeholder="MM/YY"
-                                                        className="w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
+                                                        className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
                                                     />
 
                                                 </div>
@@ -310,9 +313,10 @@ export const Checkout = () => {
                                                     </label>
 
                                                     <input
+                                                    disabled
                                                         type="text"
                                                         placeholder="CVC"
-                                                        className="w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
+                                                        className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
                                                     />
 
                                                 </div>
@@ -328,9 +332,10 @@ export const Checkout = () => {
                                                 </label>
 
                                                 <input
+                                                disabled
                                                     type="text"
                                                     placeholder="Name On Card"
-                                                    className="w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
+                                                    className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
                                                 />
 
                                             </div>
@@ -340,6 +345,7 @@ export const Checkout = () => {
                                             <label className="flex items-center gap-2 text-sm">
 
                                                 <input
+                                                disabled
                                                     type="checkbox"
                                                     className="accent-vercity"
                                                 />
