@@ -17,6 +17,7 @@ export const LoggedInMenu = ({ logout }: MenuProps) => {
 
     const [isDrop, setIsDrop] = useState(false);
     const [activePanel, setActivePanel] = useState<Panel>(null);
+    const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true);
 
 
     const handleDrop = () => {
@@ -222,7 +223,10 @@ export const LoggedInMenu = ({ logout }: MenuProps) => {
                     <button
                         type="button"
                         className="notification relative"
-                        onClick={() => togglePanel("notification")}
+                        onClick={() => {
+                            togglePanel("notification");
+                            setHasUnreadNotifications(false);
+                        }}
                         aria-label="Notifications"
                     >
 
@@ -254,9 +258,11 @@ export const LoggedInMenu = ({ logout }: MenuProps) => {
 
                         {/* Notification badge */}
 
-                        <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] text-white">
-                            2
-                        </span>
+                        {hasUnreadNotifications && (
+                            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] text-white">
+                                2
+                            </span>
+                        )}
 
                     </button>
 
@@ -323,7 +329,10 @@ export const LoggedInMenu = ({ logout }: MenuProps) => {
 
                             <button
                                 type="button"
-                                onClick={() => setActivePanel(null)}
+                                onClick={() => {
+                                    setHasUnreadNotifications(false);
+                                    setActivePanel(null);
+                                }}
                                 className="w-full border-t border-gray-100 p-3 text-sm text-vercity hover:bg-gray-50"
                             >
                                 Mark all as read
