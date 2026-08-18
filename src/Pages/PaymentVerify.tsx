@@ -112,6 +112,8 @@ export const PaymentVerify = () => {
             enrollmentResponse.data?.success
         ) {
 
+            console.log ("Enrollment Response", enrollmentResponse)
+
             console.log(
                 "COURSE ENROLLMENT SUCCESSFUL"
             );

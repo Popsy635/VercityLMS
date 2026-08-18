@@ -53,6 +53,9 @@ export const ActualDashboard = ({
 
     const [xp, setXp] = useState(0);
     const [streakDays, setStreakDays] = useState(0);
+    const [longestStreak, setLongestStreak] = useState(0);
+    const [activeDates, setActiveDates] = useState<string[]>([]);
+    const [lastActiveDate, setLastActiveDate] = useState<string | null>(null);
     const [statsLoading, setStatsLoading] = useState(true);
 
     const [coursesLoading, setCoursesLoading] =
@@ -76,9 +79,14 @@ export const ActualDashboard = ({
 
                 // We'll adjust these once we see your actual API response
                 setXp(xpResponse.data?.data?.xp ?? 0);
-                setStreakDays(
-                    streakResponse.data?.data?.streak ?? 0
-                );
+                const streakData = streakResponse.data?.data;
+
+                setStreakDays(streakData?.currentStreak ?? 0);
+                setLongestStreak(streakData?.longestStreak ?? 0);
+                setActiveDates(streakData?.activeDates ?? []);
+                setLastActiveDate(streakData?.lastActiveDate ?? null);
+
+
 
             } catch (error) {
 
@@ -99,7 +107,49 @@ export const ActualDashboard = ({
 
     }, [axiosPrivate]);
 
+    const weekDays = useMemo(() => {
 
+        const today = new Date();
+
+        const startOfWeek = new Date(today);
+
+        // Sunday = first day of week
+        startOfWeek.setDate(
+            today.getDate() - today.getDay()
+        );
+
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        return Array.from({ length: 7 }, (_, index) => {
+
+            const date = new Date(startOfWeek);
+
+            date.setDate(
+                startOfWeek.getDate() + index
+            );
+
+            return date;
+
+        });
+
+    }, []);
+
+    const completedThisWeek = useMemo(() => {
+
+        return weekDays.filter((date) => {
+
+            const dateString =
+                date.toISOString().split("T")[0];
+
+            return activeDates.includes(dateString);
+
+        }).length;
+
+    }, [weekDays, activeDates]);
+
+
+    const weeklyProgress =
+        completedThisWeek / 7;
 
 
     /*
@@ -547,64 +597,229 @@ export const ActualDashboard = ({
 
                 {/* STREAK */}
 
-                <div className="min-h-38.75 rounded-2xl bg-[#f0efff] p-5">
+                {/* STREAK */}
 
-                    <h2 className="text-base font-semibold">
-                        Your Streak
-                    </h2>
+<div className="min-h-38.75 rounded-2xl bg-[#f0efff] p-5">
 
+    {/* HEADER */}
 
-                    <div className="mt-3 flex items-center gap-4">
+    <div className="flex items-center justify-between">
 
-                        <div className="flex h-14 w-14 items-center justify-center">
+        <h2 className="text-base font-semibold">
+            Your Streak
+        </h2>
 
-                            <img
-                                src={streak}
-                                alt="streak fire"
-                                className="h-12 w-12 object-contain"
-                            />
+        <span className="text-xs text-gray-500">
+            This Week
+        </span>
 
-                        </div>
-
-
-                        <div>
-
-                            <p className="text-3xl font-semibold">
-                                {statsLoading ? "..." : streakDays}
-                            </p>
-
-                            <p className="text-xs text-gray-500">
-                                Days
-                            </p>
-
-                        </div>
-
-                    </div>
+    </div>
 
 
-                    <div className="mt-3 flex gap-1.5">
+    {/* FIRE + STREAK */}
 
-                        {Array.from({ length: 7 }).map((_, index) => {
+    <div className="mt-3 flex items-center gap-5">
 
-                            const isCompleted = index < streakDays;
+        {/* CIRCULAR FIRE */}
 
-                            return (
-                                <div
-                                    key={index}
-                                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${isCompleted
-                                        ? "bg-cyan-400 text-white"
-                                        : "bg-gray-300 text-white"
-                                        }`}
-                                >
-                                    {isCompleted ? "✓" : ""}
-                                </div>
-                            );
+        <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
 
-                        })}
+            <svg
+                className="absolute inset-0 h-full w-full -rotate-90"
+                viewBox="0 0 100 100"
+            >
 
-                    </div>
+                {/* BACKGROUND RING */}
+
+                <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    fill="none"
+                    stroke="#d9d7e8"
+                    strokeWidth="7"
+                />
+
+
+                {/* PROGRESS RING */}
+
+                <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    fill="none"
+                    stroke="#22d3ee"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 42}
+                    strokeDashoffset={
+                        2 *
+                        Math.PI *
+                        42 *
+                        (1 - weeklyProgress)
+                    }
+                    className="transition-all duration-700 ease-out"
+                />
+
+            </svg>
+
+
+            {/* FIRE */}
+
+            <img
+                src={streak}
+                alt="streak fire"
+                className="relative z-5 h-11 w-11 object-contain"
+            />
+
+        </div>
+
+
+        {/* STREAK NUMBER */}
+
+        <div>
+
+            <p className="text-3xl font-semibold text-gray-900">
+
+                {statsLoading
+                    ? "..."
+                    : streakDays
+                }
+
+            </p>
+
+            <p className="text-xs text-gray-500">
+
+                {streakDays === 1
+                    ? "Day"
+                    : "Days"
+                }
+
+            </p>
+
+            <p className="mt-1 text-[11px] text-gray-400">
+
+                Best: {longestStreak} days
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {/* WEEK DAYS */}
+
+    <div className="mt-4 grid grid-cols-7 gap-1">
+
+        {weekDays.map((date) => {
+
+            const dateString =
+                date.toISOString().split("T")[0];
+
+            const isCompleted =
+                activeDates.includes(dateString);
+
+            const isToday =
+                date.toDateString() ===
+                new Date().toDateString();
+
+            const dayLetter =
+                date.toLocaleDateString(
+                    "en-US",
+                    {
+                        weekday: "narrow"
+                    }
+                );
+
+            return (
+
+                <div
+                    key={dateString}
+                    className="flex flex-col items-center gap-1"
+                >
+
+                    {/* DAY LETTER */}
+
+                    <span
+                        className={`text-[11px] font-medium ${
+                            isToday
+                                ? "text-vercity"
+                                : "text-gray-400"
+                        }`}
+                    >
+                        {dayLetter}
+                    </span>
+
+
+                    {/* DAY CIRCLE */}
+
+                    {/* DAY CIRCLE */}
+
+<div
+    className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold transition-all duration-300 ${
+        isCompleted
+            ? "bg-cyan-400 text-white"
+            : isToday
+                ? "bg-cyan-100 text-cyan-500"
+                : "bg-gray-200 text-gray-400"
+    }`}
+>
+   {isCompleted && (
+    <svg
+        className="h-3.5 w-3.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        <path d="M5 12l4 4L19 7" />
+    </svg>
+)}
+</div>
 
                 </div>
+
+            );
+
+        })}
+
+    </div>
+
+
+    {/* WEEKLY PROGRESS */}
+
+    <div className="mt-3">
+
+        <div className="flex items-center justify-between">
+
+            <span className="text-[10px] text-gray-400">
+                Weekly activity
+            </span>
+
+            <span className="text-[10px] font-medium text-vercity">
+                {completedThisWeek}/7 days
+            </span>
+
+        </div>
+
+
+        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-gray-200">
+
+            <div
+                className="h-full rounded-full bg-cyan-400 transition-all duration-700 ease-out"
+                style={{
+                    width: `${weeklyProgress * 100}%`
+                }}
+            />
+
+        </div>
+
+    </div>
+
+</div>
 
             </section>
 

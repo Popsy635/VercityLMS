@@ -26,6 +26,11 @@ import QuizHome from './Features/quizzes/QuizHome'
 import QuizPage from './Features/quizzes/QuizPage'
 import QuizResult from './Features/quizzes/QuizResult'
 import AILearningAssistant from './Features/quizzes/ai/AI_Learning_Assistant'
+import { VerifySignUpOTP } from './Pages/VerifySignUpOTP'
+import { ProfilePicture } from './Pages/ProfilePicture'
+import { InstructorDashboard } from './Pages/InstructorDashboard'
+import { PasswordSettings } from './Pages/PasswordSettings'
+
 
 
 
@@ -48,7 +53,7 @@ function App() {
         <Route path='/ForgotPassword' element={<ForgotPassword />} />
         <Route path='/VerifyOTP' element={<VerifyOTP />} />
         <Route path='/ResetPassword' element={<ResetPassword />} />
-
+        <Route path="/VerifySignUpOTP" element={<VerifySignUpOTP />} />
 
 
 
@@ -99,6 +104,24 @@ function App() {
 
           </Route>
 
+          <Route
+    path="/Dashboard/profile-pic"
+    element={<ProfilePicture />}
+/>
+
+<Route
+    path="/Dashboard/instructor"
+    element={<InstructorDashboard />}
+/>
+
+<Route
+    path="/Dashboard/password-settings"
+    element={<PasswordSettings />}
+/>
+
+
+
+
           <Route path="/Dashboard/quizzes/:courseId" element={<QuizHome />} />
 
           <Route
@@ -111,10 +134,7 @@ function App() {
             element={<QuizResult />}
           />
 
-          <Route
-            path="/Dashboard/ai"
-            element={<AILearningAssistant />}
-          />
+      
 
           <Route path='/Teach' element={<Teach />} />
           <Route path='/onboardOne' element={<OnboardOne />} />

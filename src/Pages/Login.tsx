@@ -28,6 +28,7 @@ export const Login = () => {
 
   const [passwordValid, setPasswordValid] = useState<boolean | undefined>(undefined)
 
+  
   const navigate = useNavigate()
 
 
@@ -74,6 +75,8 @@ export const Login = () => {
 
   const [errMsg, setErrMsg] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     userRef.current?.focus();
   }, [])
@@ -93,65 +96,81 @@ export const Login = () => {
     passwordValid === true;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!isFormValid) { return }
+  e.preventDefault();
 
-    try {
-      const response = await axios.post(LOGIN_URL, JSON.stringify({ email: user, password }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        });
-
-      // console.log(JSON.stringify(response?.data))
-      // console.log(JSON.stringify(response))
-      const accessToken = response.data.token;
-
-      const decoded = jwtDecode<{
-        id: string;
-        email: string;
-        role: string;
-        iat: number;
-        exp: number;
-      }>(accessToken);
-
-      const authData = {
-        accessToken,
-        user: decoded.email,
-        id: decoded.id,
-        role: decoded.role,
-      };
-
-
-      localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
-
-      setAuth(authData);
-
-
-
-
-      // console.log("Saved:", localStorage.getItem("auth"));
-
-      setUser('');
-      setPassword('');
-      navigate("/");
-
-    } catch (err) {
-      const axiosError = err as { response?: { status?: number } };
-      if (!axiosError.response) {
-        setErrMsg('No Server Response');
-      } else if (axiosError.response.status === 400) {
-        setErrMsg('Missing Username or Password');
-      } else if (axiosError.response.status === 401) {
-        setErrMsg('Unauthorized');
-      } else {
-        setErrMsg('Login Failed');
-      }
-
-      errRef.current?.focus();
-
-    }
+  if (!isFormValid || isLoading) {
+    return;
   }
+
+  setIsLoading(true);
+
+  try {
+    const response = await axios.post(
+      LOGIN_URL,
+      JSON.stringify({
+        email: user,
+        password
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      }
+    );
+
+    const accessToken = response.data.token;
+
+    const decoded = jwtDecode<{
+      id: string;
+      email: string;
+      role: string;
+      iat: number;
+      exp: number;
+    }>(accessToken);
+
+    const authData = {
+      accessToken,
+      user: decoded.email,
+      id: decoded.id,
+      role: decoded.role,
+    };
+
+    localStorage.setItem(
+      "rememberMe",
+      JSON.stringify(rememberMe)
+    );
+
+    setAuth(authData);
+
+    setUser('');
+    setPassword('');
+
+    navigate("/");
+
+  } catch (err) {
+    const axiosError = err as {
+      response?: {
+        status?: number
+      }
+    };
+
+    if (!axiosError.response) {
+      setErrMsg('No Server Response');
+    } else if (axiosError.response.status === 400) {
+      setErrMsg('Missing Username or Password');
+    } else if (axiosError.response.status === 401) {
+      setErrMsg('Unauthorized');
+    } else {
+      setErrMsg('Login Failed');
+    }
+
+    errRef.current?.focus();
+
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   //   const isUserOk = validateUser(user);
   //   const isPasswordOk = validatePassword(password);
@@ -285,7 +304,24 @@ export const Login = () => {
                   <Link to="/ForgotPassword">Forgot Password?</Link>
                 </div>
 
-                <button type="submit" disabled={!isFormValid} className={`${!isFormValid ? "bg-gray-400 text-white px-2 rounded-xl py-1 cursor-not-allowed" : "bg-vercity active:bg-vercity/50 text-white px-2 rounded-xl py-1 hover:bg-linear-to-bl hover:from-vercity hover:to-advbut  hover:transition hover:ease-in-out hover:duration-300 "}`}>Sign In</button>
+                <button
+  type="submit"
+  disabled={!isFormValid || isLoading}
+  className={`px-2 py-3 rounded-xl text-white transition duration-300 ${
+    !isFormValid || isLoading
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-vercity hover:bg-linear-to-bl hover:from-vercity hover:to-advbut"
+  }`}
+>
+  {isLoading ? (
+    <span className="flex items-center justify-center gap-2">
+      <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+      Signing in...
+    </span>
+  ) : (
+    "Sign In"
+  )}
+</button>
 
               </form>
               {/* <ToastContainer position="top-right" autoClose={3000}/> */}
