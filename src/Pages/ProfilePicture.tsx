@@ -84,7 +84,7 @@ export const ProfilePicture = () => {
     return (
         <div className="w-full bg-white px-4 py-8 lg:px-8">
 
-            <div className="mx-auto max-w-4xl">
+            <div className="mx-auto p-2 max-w-4xl">
 
                 {/* HEADER */}
 

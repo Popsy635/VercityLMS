@@ -30,7 +30,7 @@ export const ProfileDropDown: React.FC<PddProps> = ({
     return (
         <div>
             {open && (
-                <div className="profile-dropdown absolute right-0 max-w-70 translate-y-16 animate-[fadeIn_180ms_ease-out]">
+                <div className="profile-dropdown absolute right-0 translate-y-16 animate-[fadeIn_180ms_ease-out]">
 
                     <div className="rounded-2xl bg-white px-6 py-10 shadow-sm">
 
