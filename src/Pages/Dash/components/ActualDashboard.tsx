@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import AuthContext from "../../../Context/AuthProvider";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
@@ -38,7 +38,7 @@ export const ActualDashboard = ({
     const { auth } = useContext(AuthContext);
 
     const navigate = useNavigate();
-    const location = useLocation();
+    // const location = useLocation();
 
     const axiosPrivate = useAxiosPrivate();
 
@@ -56,7 +56,7 @@ export const ActualDashboard = ({
     const [streakDays, setStreakDays] = useState(0);
     const [longestStreak, setLongestStreak] = useState(0);
     const [activeDates, setActiveDates] = useState<string[]>([]);
-    const [lastActiveDate, setLastActiveDate] = useState<string | null>(null);
+    // const [lastActiveDate, setLastActiveDate] = useState<string | null>(null);
     const [statsLoading, setStatsLoading] = useState(true);
 
     const [coursesLoading, setCoursesLoading] =
@@ -81,7 +81,7 @@ setXp(xpResponse.data?.data?.totalXP ?? 0);
         setStreakDays(streakData?.currentStreak ?? 0);
         setLongestStreak(streakData?.longestStreak ?? 0);
         setActiveDates(streakData?.days ?? []);
-        setLastActiveDate(streakData?.lastActiveDate ?? null);
+        // setLastActiveDate(streakData?.lastActiveDate ?? null);
 
     } catch (error) {
         console.error("STUDENT STATS ERROR:", error);

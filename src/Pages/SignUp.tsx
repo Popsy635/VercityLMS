@@ -41,7 +41,7 @@ export const SignUp = () => {
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [success ] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
