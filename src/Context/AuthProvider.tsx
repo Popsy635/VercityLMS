@@ -5,6 +5,7 @@ type AuthState = {
   accessToken?: string;
   id?: string;
   role?: string;
+  avatar?: string;
 };
 
 type AuthContextType = {

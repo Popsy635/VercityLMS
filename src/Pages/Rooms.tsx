@@ -84,9 +84,14 @@ export const Rooms = () => {
 
     const markLessonComplete = async (lessonId: string) => {
         try {
-            await axiosPrivate.post("/student/lessons/complete", {
-                lessonId,
-            });
+            const response = await axiosPrivate.post(
+    "/student/lessons/complete",
+    {
+        lessonId,
+    }
+);
+
+console.log("LESSON COMPLETE RESPONSE:", response.data);
 
             // Update the UI immediately
             setCourseLessons((prev) =>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export const PasswordSettings = () => {
@@ -8,6 +9,9 @@ export const PasswordSettings = () => {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+const [showNewPassword, setShowNewPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
@@ -30,7 +34,7 @@ export const PasswordSettings = () => {
             setLoading(true);
 
             await axiosPrivate.patch(
-                "/student/change-password",
+                "/auth/changepassword",
                 {
                     currentPassword,
                     newPassword,
@@ -83,68 +87,113 @@ export const PasswordSettings = () => {
 
                         {/* CURRENT PASSWORD */}
 
-                        <div>
+                        <div className="relative">
 
-                            <label className="mb-2 block text-sm font-medium">
-                                Current Password
-                            </label>
+    <input
+        type={showCurrentPassword ? "text" : "password"}
+        value={currentPassword}
+        onChange={(e) =>
+            setCurrentPassword(e.target.value)
+        }
+        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 pr-12 outline-none focus:border-vercity"
+        placeholder="Enter current password"
+        required
+    />
 
-                            <input
-                                type="password"
-                                value={currentPassword}
-                                onChange={(e) =>
-                                    setCurrentPassword(e.target.value)
-                                }
-                                className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 outline-none focus:border-vercity"
-                                placeholder="Enter current password"
-                                required
-                            />
+    <button
+        type="button"
+        onClick={() =>
+            setShowCurrentPassword(!showCurrentPassword)
+        }
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-vercity"
+        aria-label={
+            showCurrentPassword
+                ? "Hide password"
+                : "Show password"
+        }
+    >
+        {showCurrentPassword ? (
+            <EyeOff size={20} />
+        ) : (
+            <Eye size={20} />
+        )}
+    </button>
 
-                        </div>
+</div>
 
 
                         {/* NEW PASSWORD */}
 
-                        <div>
+                        <div className="relative">
 
-                            <label className="mb-2 block text-sm font-medium">
-                                New Password
-                            </label>
+    <input
+        type={showNewPassword ? "text" : "password"}
+        value={newPassword}
+        onChange={(e) =>
+            setNewPassword(e.target.value)
+        }
+        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 pr-12 outline-none focus:border-vercity"
+        placeholder="Enter new password"
+        required
+    />
 
-                            <input
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) =>
-                                    setNewPassword(e.target.value)
-                                }
-                                className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 outline-none focus:border-vercity"
-                                placeholder="Enter new password"
-                                required
-                            />
+    <button
+        type="button"
+        onClick={() =>
+            setShowNewPassword(!showNewPassword)
+        }
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-vercity"
+        aria-label={
+            showNewPassword
+                ? "Hide password"
+                : "Show password"
+        }
+    >
+        {showNewPassword ? (
+            <EyeOff size={20} />
+        ) : (
+            <Eye size={20} />
+        )}
+    </button>
 
-                        </div>
+</div>
 
 
                         {/* CONFIRM */}
 
-                        <div>
+                        <div className="relative">
 
-                            <label className="mb-2 block text-sm font-medium">
-                                Confirm New Password
-                            </label>
+    <input
+        type={showConfirmPassword ? "text" : "password"}
+        value={confirmPassword}
+        onChange={(e) =>
+            setConfirmPassword(e.target.value)
+        }
+        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 pr-12 outline-none focus:border-vercity"
+        placeholder="Confirm new password"
+        required
+    />
 
-                            <input
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) =>
-                                    setConfirmPassword(e.target.value)
-                                }
-                                className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 outline-none focus:border-vercity"
-                                placeholder="Confirm new password"
-                                required
-                            />
+    <button
+        type="button"
+        onClick={() =>
+            setShowConfirmPassword(!showConfirmPassword)
+        }
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-vercity"
+        aria-label={
+            showConfirmPassword
+                ? "Hide password"
+                : "Show password"
+        }
+    >
+        {showConfirmPassword ? (
+            <EyeOff size={20} />
+        ) : (
+            <Eye size={20} />
+        )}
+    </button>
 
-                        </div>
+</div>
 
 
                         {/* MESSAGE */}
