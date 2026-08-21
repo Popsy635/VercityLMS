@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 import logo from "../assets/Union.svg";
-// import mastercard from "../assets/mastercard.png";
-// import visa from "../assets/visa.png";
-// import verve from "../assets/verve.png";
-// import paypal from "../assets/paypal.png";
-// import bank from "../assets/bank.png";
+import master from "../assets/money.png"
+import visa from "../assets/visa.png"
+import verve from "../assets/verve.png";
+import paypal from "../assets/paypal.png";
+import bank from "../assets/transfer.png";
 
 type Course = {
     _id: string;
@@ -118,8 +118,8 @@ export const Checkout = () => {
             }
 
             // Save the course before leaving the site
-                        localStorage.setItem("pendingCourseId", course._id);
-
+            localStorage.setItem("pendingCourseId", course._id);
+            localStorage.setItem("paymentReference", reference);
             // Redirect to Paystack
             window.location.href = authorizationUrl;
             console.log("AUTHORIZATION URL:", authorizationUrl);
@@ -139,7 +139,7 @@ export const Checkout = () => {
         } finally {
 
             setLoading(false);
-            
+
 
         }
     };
@@ -242,19 +242,19 @@ export const Checkout = () => {
                                         <div className="flex items-center gap-2">
 
                                             <img
-                                                // src={mastercard}
+                                                src={master}
                                                 alt="Mastercard"
                                                 className="h-8 w-12 object-contain"
                                             />
 
                                             <img
-                                                // src={visa}
+                                                src={visa}
                                                 alt="Visa"
                                                 className="h-8 w-12 object-contain"
                                             />
 
                                             <img
-                                                // src={verve}
+                                                src={verve}
                                                 alt="Verve"
                                                 className="h-8 w-12 object-contain"
                                             />
@@ -278,8 +278,8 @@ export const Checkout = () => {
                                                 </label>
 
                                                 <input
-                                                disabled
-                                                
+                                                    disabled
+
                                                     type="text"
                                                     placeholder="1234 5678 9012 3456"
                                                     className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
@@ -298,7 +298,7 @@ export const Checkout = () => {
                                                     </label>
 
                                                     <input
-                                                    disabled
+                                                        disabled
                                                         type="text"
                                                         placeholder="MM/YY"
                                                         className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
@@ -314,7 +314,7 @@ export const Checkout = () => {
                                                     </label>
 
                                                     <input
-                                                    disabled
+                                                        disabled
                                                         type="text"
                                                         placeholder="CVC"
                                                         className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
@@ -333,7 +333,7 @@ export const Checkout = () => {
                                                 </label>
 
                                                 <input
-                                                disabled
+                                                    disabled
                                                     type="text"
                                                     placeholder="Name On Card"
                                                     className="cursor-not-allowed w-full rounded-lg border border-gray-400 px-4 py-3 outline-none focus:border-vercity"
@@ -346,7 +346,7 @@ export const Checkout = () => {
                                             <label className="flex items-center gap-2 text-sm">
 
                                                 <input
-                                                disabled
+                                                    disabled
                                                     type="checkbox"
                                                     className="accent-vercity"
                                                 />
@@ -379,7 +379,7 @@ export const Checkout = () => {
                                         />
 
                                         <img
-                                            // src={paypal}
+                                            src={paypal}
                                             alt="PayPal"
                                             className="h-7 w-10 object-contain"
                                         />
@@ -410,7 +410,7 @@ export const Checkout = () => {
                                         />
 
                                         <img
-                                            // src={bank}
+                                            src={bank}
                                             alt="Bank"
                                             className="h-8 w-10 object-contain"
                                         />

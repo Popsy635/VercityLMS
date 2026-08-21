@@ -14,8 +14,10 @@ export const PaymentVerify = () => {
     useEffect(() => {
         const verifyPayment = async () => {
     const reference = searchParams.get("reference");
+    localStorage.getItem("paymentReference");
 
     console.log("PAYMENT REFERENCE:", reference);
+    
 
     if (!reference) {
         setError("Payment reference was not found.");
@@ -62,6 +64,7 @@ export const PaymentVerify = () => {
                 2
             )
         );
+        
 
         const paymentMessage =
             paymentResponse.data?.message;
@@ -81,57 +84,18 @@ export const PaymentVerify = () => {
         }
 
 
-        // ==========================================
-        // STEP 2: ENROLL USER IN COURSE
-        // ==========================================
+        if (paymentVerified) {
+    console.log("PAYMENT VERIFIED SUCCESSFULLY");
 
-        console.log(
-            "ENROLLING USER IN COURSE:",
-            pendingCourseId
-        );
+    localStorage.removeItem("pendingCourseId");
 
-        const enrollmentResponse =
-            await axiosPrivate.post(
-                "/student/enroll",
-                {
-                    courseId: pendingCourseId,
-                }
-            );
-
-        console.log(
-            "ENROLLMENT RESPONSE:",
-            enrollmentResponse.data
-        );
-
-
-        // ==========================================
-        // STEP 3: CHECK ENROLLMENT
-        // ==========================================
-
-        if (
-            enrollmentResponse.data?.success
-        ) {
-
-            console.log ("Enrollment Response", enrollmentResponse)
-
-            console.log(
-                "COURSE ENROLLMENT SUCCESSFUL"
-            );
-
-            // We no longer need the pending course
-            localStorage.removeItem(
-                "pendingCourseId"
-            );
-
-            setSuccess(true);
-
-        } else {
-
-            setError(
-                enrollmentResponse.data?.message ||
-                "Payment was successful, but course enrollment failed."
-            );
-        }
+    setSuccess(true);
+} else {
+    setError(
+        paymentMessage ||
+        "Payment verification failed."
+    );
+}
 
 
     } catch (err: any) {

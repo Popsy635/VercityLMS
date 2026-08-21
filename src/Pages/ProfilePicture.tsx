@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import AuthContext from "../Context/AuthProvider";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
@@ -11,6 +11,10 @@ export const ProfilePicture = () => {
     const [preview, setPreview] = useState<string | null>(
         auth.avatar ?? null
     );
+
+    useEffect(() => {
+        setPreview(auth.avatar ?? null);
+    }, [auth.avatar]);
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -28,22 +32,22 @@ export const ProfilePicture = () => {
 
         if (!file) return;
 
-        // Check file type
         if (!file.type.startsWith("image/")) {
             setMessage("Please select a valid image.");
             return;
         }
 
-        // Check file size - 5MB maximum
         if (file.size > 5 * 1024 * 1024) {
             setMessage("Image must be less than 5MB.");
             return;
         }
 
-        // Show image immediately
-        const imageUrl = URL.createObjectURL(file);
-        setPreview(imageUrl);
+        // const previousAvatar = auth.avatar;
 
+        // Show local preview immediately
+        const imageUrl = URL.createObjectURL(file);
+
+        setPreview(imageUrl);
         setMessage("");
         setLoading(true);
 
@@ -56,25 +60,41 @@ export const ProfilePicture = () => {
                 formData
             );
 
-            const updatedUser = response.data.data;
+            console.log("FULL AXIOS RESPONSE:", response);
+            console.log("RESPONSE DATA:", response.data);
+            console.log(
+                "UPDATED USER KEYS:",
+                Object.keys(response.data?.data || {})
+            );
 
-            // Update AuthContext
+            console.log(
+                "UPDATED USER:",
+                JSON.stringify(response.data?.data, null, 2)
+            );
+
+            const updatedUser = response.data?.data;
+
+            if (!updatedUser?.avatar) {
+                throw new Error("Backend did not return an avatar URL.");
+            }
+
             setAuth((prev) => ({
                 ...prev,
                 avatar: updatedUser.avatar,
             }));
 
-            // Use Cloudinary URL returned from backend
             setPreview(updatedUser.avatar);
 
             setMessage("Profile picture updated successfully.");
 
         } catch (error: any) {
+            console.log("PROFILE UPDATE ERROR:", error);
             console.log("STATUS:", error?.response?.status);
             console.log("BACKEND ERROR:", error?.response?.data);
 
             setPreview(auth.avatar ?? null);
             setMessage("Unable to update profile picture.");
+
         } finally {
             setLoading(false);
             event.target.value = "";
